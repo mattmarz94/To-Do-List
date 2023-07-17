@@ -37,7 +37,7 @@ onValue(toDoListInDB, function(snapshot) {
             appendToDoListEl(currentItem)
         }
     } else {
-        toDoListEl.innerHTML = "There are no current tasks! :) "
+        toDoListEl.innerHTML = "<span class ='nothing'>There is currently no task available.. </span>"
     }
 })
 
