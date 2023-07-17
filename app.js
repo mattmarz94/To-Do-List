@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"
-import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"
+import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"
 
 const appSettings = {
     databaseURL: "https://to-do-list-f4276-default-rtdb.firebaseio.com/"
@@ -22,12 +22,19 @@ addButtonEl.addEventListener("click", function() {
 })
 
 onValue(toDoListInDB, function(snapshot) {
-    let itemsArray = Object.values(snapshot.val())
+    let itemsArray = Object.entries(snapshot.val())
+
 
     clearToDoListEl()
 
-    for (let i = 0; i < itemsArray.length; i++)
-    appendToDoListEl(itemsArray[i])
+    for (let i = 0; i < itemsArray.length; i++) {
+        let currentItem = itemsArray[i]
+        let currentItemID = currentItem[0];
+        let currentItemValue = currentItem[1]
+
+        appendToDoListEl(currentItem)
+
+    }
 })
 
 function clearToDoListEl() {
@@ -38,6 +45,19 @@ function clearInputFieldEl() {
     inputFieldEl.value = ""
 }
 
-function appendToDoListEl(itemValue) {
-    toDoListEl.innerHTML += `<li> ${itemValue} </li>`
+function appendToDoListEl(task) {
+    // toDoListEl.innerHTML += `<li> ${itemValue} </li>`
+    let taskID = task[0]
+    let taskValue = task[1]
+
+    let newEl = document.createElement("li")
+
+    newEl.textContent = taskValue
+
+    newEl.addEventListener("click", function() {
+        let exactLocationOfTaskInDB = ref(database, `toDoList/${taskID}`);
+        remove(exactLocationOfTaskInDB);
+    })
+
+    toDoListEl.append(newEl)
 }
