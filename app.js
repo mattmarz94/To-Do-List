@@ -22,18 +22,22 @@ addButtonEl.addEventListener("click", function() {
 })
 
 onValue(toDoListInDB, function(snapshot) {
-    let itemsArray = Object.entries(snapshot.val())
+    
+    if (snapshot.exists()) {
+        let itemsArray = Object.entries(snapshot.val())
 
 
-    clearToDoListEl()
+        clearToDoListEl()
 
-    for (let i = 0; i < itemsArray.length; i++) {
-        let currentItem = itemsArray[i]
-        let currentItemID = currentItem[0];
-        let currentItemValue = currentItem[1]
+        for (let i = 0; i < itemsArray.length; i++) {
+            let currentItem = itemsArray[i]
+            let currentItemID = currentItem[0];
+            let currentItemValue = currentItem[1]
 
-        appendToDoListEl(currentItem)
-
+            appendToDoListEl(currentItem)
+        }
+    } else {
+        toDoListEl.innerHTML = "There are no current tasks! :) "
     }
 })
 
